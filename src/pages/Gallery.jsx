@@ -66,7 +66,7 @@ const Nasa = styled.img`
 `;
 
 const ButtonContainer = styled.div`
-  margin-top: 21px;
+  margin: 21px 0;
   display: flex;
   justify-content: center;
 `;
@@ -84,7 +84,8 @@ const Gallery = () => {
   const [totalPages, setTotalPages] = React.useState(null);
   const [page, setPage] = React.useState(query.get("page"));
 
-  const handleSearch = async (query) => {
+  const handleSearch = (query) => {
+    setPage(1);
     history.push(`/gallery?q=${query}&page=${1}`);
   };
 
@@ -113,6 +114,7 @@ const Gallery = () => {
   }, [error, searchTerm, page]);
 
   const onChangePage = (page) => {
+    history.push(`/gallery?q=${searchTerm}&page=${page}`);
     setPage(page);
   };
 
@@ -136,7 +138,9 @@ const Gallery = () => {
           onSearch={(query) => handleSearch(query)}
         />
       </Header>
+
       {error && <Error error={error} />}
+
       <GalleryContainer>
         {isLoading ? (
           <Loader />
@@ -161,19 +165,20 @@ const Gallery = () => {
           </>
         )}
       </GalleryContainer>
-      {!isLoading && (
-        <>
-          <Pagination
-            current={page}
-            defaultPageSize={100}
-            onChange={onChangePage}
-            total={totalPages}
-          />
 
-          <ButtonContainer>
-            <Button onClick={jumpToTop}>Jump to Top</Button>
-          </ButtonContainer>
-        </>
+      {!isLoading && (
+        <Pagination
+          defaultCurrent={page}
+          defaultPageSize={100}
+          onChange={onChangePage}
+          total={totalPages}
+        />
+      )}
+
+      {!isLoading && totalPages > 40 && (
+        <ButtonContainer>
+          <Button onClick={jumpToTop}>Jump to Top</Button>
+        </ButtonContainer>
       )}
     </>
   );
