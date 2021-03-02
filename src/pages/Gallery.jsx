@@ -20,10 +20,15 @@ const Image = styled.img`
 `;
 
 const ImageContainer = styled.div`
-  width: calc(100% / 3);
+  width: 25%;
   padding: 21px;
+  heght: 400px;
   box-sizing: border-box;
   margin: 0;
+
+  @media (max-width: 1024px) {
+    width: calc(100% / 3);
+  }
 
   @media (max-width: 831px) {
     width: 50%;
@@ -52,6 +57,12 @@ const EmptyStateText = styled.div`
   text-align: center;
 `;
 
+const Nasa = styled.img`
+  @media (max-width: 640px) {
+    margin-bottom: 28px;
+  }
+`;
+
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
@@ -70,7 +81,6 @@ const Gallery = () => {
   const searchTerm = query.get("q");
 
   React.useEffect(() => {
-    console.log("holaaaaa");
     setIsLoading(true);
     fetchImages(searchTerm)
       .then((response) => {
@@ -89,14 +99,11 @@ const Gallery = () => {
       });
   }, [error, searchTerm]);
 
-  console.log(images);
-
   return (
     <>
       <Header>
         <Link to="/">
-          <img
-            style={{ marginBottom: "28px" }}
+          <Nasa
             src={nasaLogo}
             alt="NASA images"
             title="NASA images"
