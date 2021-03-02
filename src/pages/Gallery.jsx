@@ -8,6 +8,9 @@ import { useHistory } from "react-router-dom";
 import Error from "../components/Error";
 import nasaLogo from "../assets/nasa-logo.svg";
 import { Link } from "react-router-dom";
+import { Pagination } from "antd";
+import Button from "../components/Button";
+import "antd/dist/antd.css";
 
 const ImagesContainer = styled.div`
   display: flex;
@@ -62,6 +65,12 @@ const Nasa = styled.img`
   }
 `;
 
+const ButtonContainer = styled.div`
+  margin-top: 21px;
+  display: flex;
+  justify-content: center;
+`;
+
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
@@ -72,16 +81,18 @@ const Gallery = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [images, setImages] = React.useState([]);
   const [error, setError] = React.useState("");
+  const [totalPages, setTotalPages] = React.useState(null);
+  const [page, setPage] = React.useState(query.get("page"));
 
   const handleSearch = async (query) => {
-    history.push(`/gallery?q=${query}`);
+    history.push(`/gallery?q=${query}&page=${1}`);
   };
 
   const searchTerm = query.get("q");
 
   React.useEffect(() => {
     setIsLoading(true);
-    fetchImages(searchTerm)
+    fetchImages(searchTerm, page)
       .then((response) => {
         if (response.status === 200) {
           if (error) {
@@ -89,6 +100,9 @@ const Gallery = () => {
           }
 
           setImages(response.data.collection.items);
+          setTotalPages(
+            Math.ceil(response.data.collection.metadata.total_hits)
+          );
           setIsLoading(false);
         }
       })
@@ -96,7 +110,15 @@ const Gallery = () => {
         setError("An error occurred, Please try again later.");
         setIsLoading(false);
       });
-  }, [error, searchTerm]);
+  }, [error, searchTerm, page]);
+
+  const onChangePage = (page) => {
+    setPage(page);
+  };
+
+  const jumpToTop = () => {
+    window.scrollTo(0, 0);
+  };
 
   return (
     <>
@@ -109,7 +131,10 @@ const Gallery = () => {
             height="64"
           />
         </Link>
-        <Searchbox onSearch={(query) => handleSearch(query)} />
+        <Searchbox
+          value={searchTerm}
+          onSearch={(query) => handleSearch(query)}
+        />
       </Header>
       {error && <Error error={error} />}
       <GalleryContainer>
@@ -136,6 +161,20 @@ const Gallery = () => {
           </>
         )}
       </GalleryContainer>
+      {!isLoading && (
+        <>
+          <Pagination
+            current={page}
+            defaultPageSize={100}
+            onChange={onChangePage}
+            total={totalPages}
+          />
+
+          <ButtonContainer>
+            <Button onClick={jumpToTop}>Jump to Top</Button>
+          </ButtonContainer>
+        </>
+      )}
     </>
   );
 };

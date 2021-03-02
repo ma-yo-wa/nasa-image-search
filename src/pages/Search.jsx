@@ -17,7 +17,7 @@ const Search = () => {
   let history = useHistory();
 
   const handleSearch = async (query) => {
-    history.push(`/gallery?q=${query}`);
+    history.push(`/gallery?q=${query}&page=${1}`);
   };
 
   return (

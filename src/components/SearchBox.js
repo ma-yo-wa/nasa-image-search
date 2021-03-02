@@ -21,7 +21,7 @@ const Container = styled.div`
 `;
 
 const SearchBox = (props) => {
-  const [query, setQuery] = React.useState("");
+  const [query, setQuery] = React.useState(props.value || "");
   const [error, setError] = React.useState("");
 
   const handleSearch = async (query) => {
