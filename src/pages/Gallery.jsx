@@ -16,13 +16,12 @@ const ImagesContainer = styled.div`
 
 const Image = styled.img`
   width: 100%;
-  height: 100%;
+  height: 300px;
 `;
 
 const ImageContainer = styled.div`
   width: 25%;
   padding: 21px;
-  heght: 400px;
   box-sizing: border-box;
   margin: 0;
 
