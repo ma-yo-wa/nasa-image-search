@@ -28,9 +28,12 @@ const SearchBox = (props) => {
     if (!query) {
       setError("Please, type your search to proceed");
       return;
+    } else {
+      if (error) {
+        setError(false);
+      }
+      props.onSearch(query);
     }
-
-    props.onSearch(query);
   };
 
   const handleKeyDown = (event) => {
